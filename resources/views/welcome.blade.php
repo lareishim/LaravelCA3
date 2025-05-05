@@ -13,10 +13,12 @@
                 This hub brings basketball and music together in one immersive platform.
             </p>
 
-            {{-- 🔁 Updated link below --}}
-            <a href="{{ url('/fan/dashboard') }}" class="mt-4 inline-block bg-white text-gray-800 px-6 py-3 rounded-full font-semibold shadow hover:bg-gray-100 transition">
-                Enter Dashboard
-            </a>
+            {{-- ✅ Only show to logged-in users --}}
+            @auth
+                <a href="{{ route('fan.dashboard') }}" class="mt-4 inline-block bg-white text-gray-800 px-6 py-3 rounded-full font-semibold shadow hover:bg-gray-100 transition">
+                    Enter Dashboard
+                </a>
+            @endauth
         </div>
     </section>
 

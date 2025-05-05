@@ -9,12 +9,14 @@ use Illuminate\Support\Facades\Auth;
 
 class GoogleController extends Controller
 {
-    public function redirectToGoogle()
+    // Handles: /auth/google
+    public function redirect()
     {
         return Socialite::driver('google')->redirect();
     }
 
-    public function handleGoogleCallback()
+    // Handles: /auth/google/callback
+    public function callback()
     {
         $googleUser = Socialite::driver('google')->stateless()->user();
 
@@ -23,12 +25,13 @@ class GoogleController extends Controller
             [
                 'name' => $googleUser->getName(),
                 'google_id' => $googleUser->getId(),
-                'password' => bcrypt(str()->random(24))
+                'password' => bcrypt(str()->random(24)),
+                'role' => 'fan', // ✅ Assign fan role
             ]
         );
 
         Auth::login($user);
 
-        return redirect('/dashboard'); // or wherever you want users to land
+        return redirect()->route('fan.dashboard');
     }
 }
