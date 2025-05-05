@@ -1,36 +1,30 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NBA Hub</title>
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+    <!-- ✅ Load CSS directly from public -->
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <!-- Favicon -->
+    <link rel="icon" href="https://cdn.nba.com/logos/nba-primary-logo.svg">
+</head>
+<body class="bg-gray-900 text-white font-sans antialiased flex flex-col min-h-screen">
 
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
-            @include('layouts.navigation')
+{{-- Navigation --}}
+@include('layouts.navigation')
 
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white dark:bg-gray-800 shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endisset
+{{-- Page Content --}}
+<main class="flex-grow">
+    @yield('content')
+</main>
 
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
-        </div>
-    </body>
+{{-- Footer --}}
+@include('layouts.footer')
+
+<!-- ✅ Load JS directly from public -->
+<script src="{{ asset('js/app.js') }}" defer></script>
+</body>
 </html>
