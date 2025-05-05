@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NBA Hub</title>
 
-    <!-- ✅ Load CSS directly from public -->
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    {{-- ✅ Load Tailwind & JS via Vite --}}
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    <!-- Favicon -->
+    {{-- Favicon --}}
     <link rel="icon" href="https://cdn.nba.com/logos/nba-primary-logo.svg">
 </head>
 <body class="bg-gray-900 text-white font-sans antialiased flex flex-col min-h-screen">
@@ -24,7 +24,5 @@
 {{-- Footer --}}
 @include('layouts.footer')
 
-<!-- ✅ Load JS directly from public -->
-<script src="{{ asset('js/app.js') }}" defer></script>
 </body>
 </html>

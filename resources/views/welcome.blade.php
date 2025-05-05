@@ -1,24 +1,27 @@
 @extends('layouts.app')
 
 @section('content')
-    {{-- Hero Section with background --}}
-    <section class="relative bg-[url('/images/nba-bg.jpg')] bg-cover bg-center bg-no-repeat text-white">
-        <div class="bg-black/60 absolute inset-0 z-0"></div>
+
+    {{-- Hero Section with Background --}}
+    <section class="relative bg-cover bg-center bg-no-repeat text-white" style="background-image: url('{{ asset('images/nba-bg.jpg') }}');">
+        <div class="absolute inset-0 bg-black bg-opacity-60 z-0"></div>
 
         <div class="relative z-10 flex flex-col items-center justify-center text-center py-24 px-4">
             <h1 class="text-4xl md:text-5xl font-extrabold mb-6">Welcome to NBA Hub 🏀</h1>
             <p class="text-lg md:text-xl max-w-3xl mb-8">
-                Track your favorite NBA players, explore their Afrobeats playlists, and relive epic basketball highlights. This hub brings basketball and music together in one immersive platform.
+                Track your favorite NBA players, explore their Afrobeats playlists, and relive epic basketball highlights.
+                This hub brings basketball and music together in one immersive platform.
             </p>
 
-            <a href="{{ url('/dashboard') }}" class="mt-4 inline-block bg-white text-gray-800 px-6 py-3 rounded-full font-semibold shadow hover:bg-gray-100 transition">
+            {{-- 🔁 Updated link below --}}
+            <a href="{{ url('/fan/dashboard') }}" class="mt-4 inline-block bg-white text-gray-800 px-6 py-3 rounded-full font-semibold shadow hover:bg-gray-100 transition">
                 Enter Dashboard
             </a>
         </div>
     </section>
 
     {{-- Why NBA Hub Section --}}
-    <section class="bg-gray-800 py-16 px-8 text-left text-white">
+    <section class="bg-gray-900 py-16 px-8 text-left text-white">
         <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
             <div>
                 <h2 class="text-3xl font-bold mb-6">Why NBA Hub?</h2>
@@ -38,5 +41,4 @@
         </div>
     </section>
 
-    @include('layouts.footer')
 @endsection
