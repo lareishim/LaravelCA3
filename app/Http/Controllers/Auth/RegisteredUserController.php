@@ -52,18 +52,6 @@ class RegisteredUserController extends Controller
         event(new Registered($user));
         Auth::login($user);
 
-        return redirect()->intended($this->redirectToDashboard($user));
-    }
-
-    /**
-     * Redirect user to the appropriate dashboard based on role.
-     */
-    protected function redirectToDashboard(User $user): string
-    {
-        return match ($user->role) {
-            'admin' => route('admin.dashboard'),
-            'editor' => route('editor.dashboard'),
-            default => route('fan.dashboard'),
-        };
+        return redirect()->intended(route('dashboard'));
     }
 }

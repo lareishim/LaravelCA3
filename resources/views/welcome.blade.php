@@ -15,7 +15,7 @@
 
             {{-- ✅ Only show to logged-in users --}}
             @auth
-                <a href="{{ route('fan.dashboard') }}" class="inline-block bg-white text-gray-800 px-6 py-3 rounded-full font-semibold shadow hover:bg-gray-100 transition">
+                <a href="{{ route('dashboard') }}" class="inline-block bg-white text-gray-800 px-6 py-3 rounded-full font-semibold shadow hover:bg-gray-100 transition">
                     Enter Dashboard
                 </a>
             @endauth
