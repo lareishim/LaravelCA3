@@ -23,7 +23,7 @@
     </section>
 
     {{-- Why NBA Hub Section --}}
-    <section class="bg-gray-900 py-16 px-8 text-left text-white">
+    <section class="bg-gray-900 pt-16 pb-4 px-8 text-left text-white">
         <div class="max-w-6xl mx-auto grid md:grid-cols-2 gap-12 items-center">
             <div>
                 <h2 class="text-3xl font-bold mb-6">Why NBA Hub?</h2>
