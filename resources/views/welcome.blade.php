@@ -3,19 +3,19 @@
 @section('content')
 
     {{-- Hero Section with Background --}}
-    <section class="relative bg-cover bg-center bg-no-repeat text-white" style="background-image: url('{{ asset('images/nba-bg.jpg') }}');">
+    <section class="relative bg-cover bg-center bg-no-repeat text-white min-h-screen flex items-center justify-center" style="background-image: url('{{ asset('images/nba-bg.jpg') }}');">
         <div class="absolute inset-0 bg-black bg-opacity-60 z-0"></div>
 
-        <div class="relative z-10 flex flex-col items-center justify-center text-center py-24 px-4">
+        <div class="relative z-10 text-center px-4 py-12">
             <h1 class="text-4xl md:text-5xl font-extrabold mb-6">Welcome to NBA Hub 🏀</h1>
-            <p class="text-lg md:text-xl max-w-3xl mb-8">
+            <p class="text-lg md:text-xl max-w-3xl mx-auto mb-8">
                 Track your favorite NBA players, explore their Afrobeats playlists, and relive epic basketball highlights.
                 This hub brings basketball and music together in one immersive platform.
             </p>
 
             {{-- ✅ Only show to logged-in users --}}
             @auth
-                <a href="{{ route('fan.dashboard') }}" class="mt-4 inline-block bg-white text-gray-800 px-6 py-3 rounded-full font-semibold shadow hover:bg-gray-100 transition">
+                <a href="{{ route('fan.dashboard') }}" class="inline-block bg-white text-gray-800 px-6 py-3 rounded-full font-semibold shadow hover:bg-gray-100 transition">
                     Enter Dashboard
                 </a>
             @endauth
