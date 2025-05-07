@@ -16,23 +16,29 @@
 </head>
 <body class="font-sans antialiased bg-gray-900 text-white">
 
-@include('layouts.navigation')
+{{-- Full width nav bar --}}
+<div class="w-full bg-gray-800 shadow">
+    @include('layouts.navigation')
+</div>
 
-<!-- Page Heading -->
+{{-- Optional header --}}
 @isset($header)
-    <header class="bg-gray-800 shadow">
+    <header class="w-full bg-gray-800 shadow">
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
             {{ $header }}
         </div>
     </header>
 @endisset
 
-<!-- Page Content -->
-<main class="bg-gray-900">
+{{-- Page content --}}
+<main class="w-full">
     @yield('content')
 </main>
 
-@include('layouts.footer')
+{{-- Footer --}}
+<div class="w-full bg-gray-800 text-center py-4 mt-8">
+    @include('layouts.footer')
+</div>
 
 </body>
 </html>
