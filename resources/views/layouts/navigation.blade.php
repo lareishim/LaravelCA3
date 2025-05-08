@@ -2,7 +2,7 @@
     <div class="px-4 sm:px-6 lg:px-8 flex justify-between h-16 items-center">
         <!-- Logo + Left Links -->
         <div class="flex items-center space-x-4">
-            <a href="{{ url('/') }}">
+            <a href="{{ url('images/logo.jpg') }}">
                 <x-application-logo class="block h-9 w-auto fill-current text-white" />
             </a>
             @auth

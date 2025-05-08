@@ -38,7 +38,7 @@
                 </ul>
             </div>
             <div class="flex justify-center">
-                <img src="{{ asset('images/logo.jpg') }}" alt="NBA Logo" class="w-80 rounded-lg shadow-lg">
+                <img src="{{ asset('images/body.jpg') }}" alt="NBA Logo" class="w-80 rounded-lg shadow-lg">
             </div>
         </div>
     </section>
