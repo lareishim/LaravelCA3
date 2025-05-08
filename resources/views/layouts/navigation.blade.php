@@ -1,9 +1,10 @@
+<!-- resources/views/layouts/navbar.blade.php -->
 <nav x-data="{ open: false }" class="bg-gray-900 text-white border-b border-gray-700 w-full">
     <div class="px-4 sm:px-6 lg:px-8 flex justify-between h-16 items-center">
         <!-- Logo + Left Links -->
         <div class="flex items-center space-x-4">
-            <a href="{{ url('images/logo.jpg') }}">
-                <x-application-logo class="block h-9 w-auto fill-current text-white" />
+            <a href="{{ url('/') }}">
+                <img src="{{ asset('images/logo.jpg') }}" alt="NBA Hub Logo" class="h-9 w-auto rounded shadow" />
             </a>
             @auth
                 <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
