@@ -21,6 +21,12 @@ Route::middleware('auth')->group(function () {
 Route::get('/players', [PlayerController::class, 'index'])->name('players.index');
 Route::get('/players/{player}', [PlayerController::class, 'show'])->name('players.show');
 
+// Like/Unlike functionality for authenticated users
+Route::middleware('auth')->group(function () {
+    Route::post('/players/{player}/like', [PlayerController::class, 'like'])->name('players.like');
+    Route::delete('/players/{player}/unlike', [PlayerController::class, 'unlike'])->name('players.unlike');
+});
+
 // Admin-only access to manage players
 Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/players/create', [PlayerController::class, 'create'])->name('players.create');

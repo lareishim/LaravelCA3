@@ -4,31 +4,28 @@ namespace App\Http\Controllers;
 
 use App\Models\Player;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PlayerController extends Controller
 {
-    // Show all players
     public function index()
     {
         $players = Player::all();
         return view('players.index', compact('players'));
     }
 
-
-    // Show player creation form (admin only)
     public function create()
     {
         return view('players.create');
     }
 
-    // Store a new player (admin only)
     public function store(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
             'team' => 'nullable|string|max:255',
             'position' => 'nullable|string|max:255',
-            'image' => 'nullable|string|max:255', // local file name like lebron.jpg
+            'image' => 'nullable|string|max:255',
             'highlight_url' => 'nullable|url',
             'afrobeats_track' => 'nullable|string|max:255',
             'points_per_game' => 'nullable|integer',
@@ -41,19 +38,16 @@ class PlayerController extends Controller
         return redirect()->route('players.index')->with('success', 'Player added successfully.');
     }
 
-    // Show a single player profile
     public function show(Player $player)
     {
         return view('players.show', compact('player'));
     }
 
-    // Show edit form (admin only)
     public function edit(Player $player)
     {
         return view('players.edit', compact('player'));
     }
 
-    // Update a player (admin only)
     public function update(Request $request, Player $player)
     {
         $request->validate([
@@ -73,11 +67,28 @@ class PlayerController extends Controller
         return redirect()->route('players.index')->with('success', 'Player updated.');
     }
 
-    // Delete a player (admin only)
     public function destroy(Player $player)
     {
         $player->delete();
 
         return redirect()->route('players.index')->with('success', 'Player deleted.');
+    }
+
+    // ✅ Like a player
+    public function like(Player $player)
+    {
+        $user = Auth::user();
+        $user->likedPlayers()->syncWithoutDetaching([$player->id]);
+
+        return redirect()->back()->with('success', 'Player liked.');
+    }
+
+    // ✅ Unlike a player
+    public function unlike(Player $player)
+    {
+        $user = Auth::user();
+        $user->likedPlayers()->detach($player->id);
+
+        return redirect()->back()->with('success', 'Player unliked.');
     }
 }
