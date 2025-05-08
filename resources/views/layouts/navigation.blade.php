@@ -9,6 +9,9 @@
                 <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                     Dashboard
                 </x-nav-link>
+                <x-nav-link :href="route('players.index')" :active="request()->routeIs('players.*')">
+                    Players
+                </x-nav-link>
             @endauth
         </div>
 
@@ -64,6 +67,9 @@
         @auth
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 Dashboard
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('players.index')" :active="request()->routeIs('players.*')">
+                Players
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('profile.edit')">
                 {{ __('Profile') }}

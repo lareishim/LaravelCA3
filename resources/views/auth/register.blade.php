@@ -50,7 +50,7 @@
                     <a href="{{ route('login') }}" class="text-indigo-400 hover:underline">Log in</a>
                 </p>
                 <p class="mt-2">
-                    <a href="{{ url('/') }}" class="text-indigo-400 hover:underline">← Back to Home</a>
+                    <a href="{{ url('/')wwww }}" class="text-indigo-400 hover:underline">← Back to Home</a>
                 </p>
             </div>
         </div>
