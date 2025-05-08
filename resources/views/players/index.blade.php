@@ -1,43 +1,48 @@
-@extends('layouts.app')
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="text-2xl font-bold text-white">
+            {{ $player->name }} — {{ $player->team }} ({{ $player->position }})
+        </h2>
+    </x-slot>
 
-@section('content')
-    <div class="max-w-7xl mx-auto px-4 py-8 text-white">
-        <div class="flex items-center justify-between mb-6">
-            <h1 class="text-2xl font-bold">NBA Players</h1>
+    <div class="py-10 px-4 max-w-5xl mx-auto text-white">
+        <div class="bg-gray-900 rounded-lg p-6 shadow-md space-y-6">
 
-            @auth
-                @if(auth()->user()->role === 'admin')
-                    <a href="{{ route('players.create') }}"
-                       class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded shadow">
-                        + Add Player
-                    </a>
-                @endif
-            @endauth
-        </div>
+            <div class="flex flex-col md:flex-row gap-6">
+                <img src="{{ asset('images/' . $player->image) }}" alt="{{ $player->name }}"
+                     class="w-64 h-64 object-cover rounded border border-gray-700">
 
-        @if(session('success'))
-            <div class="bg-green-600 text-white px-4 py-2 rounded mb-4">
-                {{ session('success') }}
-            </div>
-        @endif
-
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            @forelse($players as $player)
-                <div class="bg-gray-800 rounded-lg shadow p-4">
-                    @if($player->image)
-                        <img src="{{ $player->image }}" alt="{{ $player->name }}" class="w-full h-48 object-cover rounded mb-4">
-                    @endif
-
-                    <h2 class="text-xl font-semibold">{{ $player->name }}</h2>
-                    <p class="text-gray-400">{{ $player->team ?? 'No team' }} — {{ $player->position ?? 'N/A' }}</p>
-
-                    <div class="mt-3">
-                        <a href="{{ route('players.show', $player) }}" class="text-indigo-400 hover:underline">View Profile</a>
-                    </div>
+                <div class="space-y-2">
+                    <p><strong>Afrobeats Track:</strong> {{ $player->afrobeats_track }}</p>
+                    <p><strong>Points/Game:</strong> {{ $player->points_per_game }}</p>
+                    <p><strong>Assists/Game:</strong> {{ $player->assists_per_game }}</p>
+                    <p><strong>Rebounds/Game:</strong> {{ $player->rebounds_per_game }}</p>
                 </div>
-            @empty
-                <p>No players added yet.</p>
-            @endforelse
+            </div>
+
+            @php
+                $youtubeId = null;
+                if ($player->highlight_url) {
+                    if (str_contains($player->highlight_url, 'youtu.be/')) {
+                        $youtubeId = substr($player->highlight_url, strrpos($player->highlight_url, '/') + 1);
+                    } elseif (preg_match('/v=([^&]+)/', $player->highlight_url, $matches)) {
+                        $youtubeId = $matches[1];
+                    }
+                }
+            @endphp
+
+            @if ($youtubeId)
+                <div class="mt-4">
+                    <iframe class="w-full h-64 md:h-96 rounded"
+                            src="https://www.youtube.com/embed/{{ $youtubeId }}"
+                            title="Player Highlight"
+                            frameborder="0"
+                            allowfullscreen>
+                    </iframe>
+                </div>
+            @else
+                <p class="text-gray-400 italic">No highlight video available.</p>
+            @endif
         </div>
     </div>
-@endsection
+</x-app-layout>
