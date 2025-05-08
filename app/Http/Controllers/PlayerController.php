@@ -14,6 +14,7 @@ class PlayerController extends Controller
         return view('players.index', compact('players'));
     }
 
+
     // Show player creation form (admin only)
     public function create()
     {
