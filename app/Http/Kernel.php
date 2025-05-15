@@ -35,6 +35,6 @@ class Kernel extends HttpKernel
     protected $routeMiddleware = [
         'auth' => \App\Http\Middleware\Authenticate::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
-        'role' => \App\Http\Middleware\RoleMiddleware::class, // ✅ Role middleware added
+        'role' => \Spatie\Permission\Middleware\RoleMiddleware::class, // ✅ Correct Spatie middleware
     ];
 }
