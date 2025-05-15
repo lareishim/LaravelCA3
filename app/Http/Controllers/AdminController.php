@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Post;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -35,7 +36,6 @@ class AdminController extends Controller
      */
     public function reports()
     {
-        // In a real app, you’d fetch reports from a reports table
         return view('admin.reports');
     }
 
@@ -44,17 +44,35 @@ class AdminController extends Controller
      */
     public function logs()
     {
-        // You could load logs from database or a log file
         return view('admin.logs');
     }
 
     /**
-     * Show pending content for approval.
+     * Show pending posts for approval.
+     */
+    public function pendingPosts()
+    {
+        $posts = Post::where('approved', false)->with(['user', 'player'])->get();
+        return view('admin.pending', compact('posts'));
+    }
+
+    /**
+     * Approve a submitted post.
+     */
+    public function approvePost(Post $post)
+    {
+        $post->approved = true;
+        $post->save();
+
+        return back()->with('success', 'Post approved.');
+    }
+
+    /**
+     * (Optional) Legacy hook for pending content.
      */
     public function pendingContent()
     {
-        // Retrieve pending posts or submissions
-        return view('admin.pending');
+        return $this->pendingPosts();
     }
 
     /**

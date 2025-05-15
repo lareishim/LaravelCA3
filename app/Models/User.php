@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Spatie\Permission\Traits\HasRoles; // ✅ Import Spatie trait
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasRoles; // ✅ Apply the trait
+    use HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -21,7 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role', // ✅ Now role is updatable
+        'role',
     ];
 
     /**
@@ -35,7 +36,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * The attributes that should be cast.
      *
      * @return array<string, string>
      */
@@ -53,5 +54,13 @@ class User extends Authenticatable
     public function likedPlayers(): BelongsToMany
     {
         return $this->belongsToMany(Player::class, 'player_user');
+    }
+
+    /**
+     * Posts created by the user.
+     */
+    public function posts(): HasMany
+    {
+        return $this->hasMany(Post::class);
     }
 }

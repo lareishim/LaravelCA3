@@ -6,11 +6,12 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\PlayerController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\PostController;
 
 // Public homepage
 Route::view('/', 'welcome');
 
-// Authenticated users: profile and dashboard
+// Authenticated users: profile, dashboard, and posts
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -20,6 +21,12 @@ Route::middleware('auth')->group(function () {
     // Like/unlike players
     Route::post('/players/{player}/like', [PlayerController::class, 'like'])->name('players.like');
     Route::delete('/players/{player}/unlike', [PlayerController::class, 'unlike'])->name('players.unlike');
+
+    // Posts (fan/editor/admin access)
+    Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
+    Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
+    Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
+    Route::get('/posts/mine', [PostController::class, 'myPosts'])->name('posts.mine');
 });
 
 // Public: view players
@@ -38,6 +45,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     // Users
     Route::get('/users', [AdminController::class, 'users'])->name('users.index');
     Route::delete('/users/{user}', [AdminController::class, 'destroy'])->name('users.destroy');
+
+    // Admin post approval
+    Route::get('/posts/pending', [AdminController::class, 'pendingPosts'])->name('posts.pending');
+    Route::patch('/posts/{post}/approve', [AdminController::class, 'approvePost'])->name('posts.approve');
 
     // Optional future tools
     Route::get('/content/pending', [AdminController::class, 'pendingContent'])->name('content.pending');

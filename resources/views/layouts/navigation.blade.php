@@ -1,4 +1,3 @@
-<!-- resources/views/layouts/navbar.blade.php -->
 <nav x-data="{ open: false }" class="bg-gray-900 text-white border-b border-gray-700 w-full">
     <div class="px-4 sm:px-6 lg:px-8 flex justify-between h-16 items-center">
         <!-- Logo + Left Links -->
@@ -13,6 +12,30 @@
                 <x-nav-link :href="route('players.index')" :active="request()->routeIs('players.*')">
                     Players
                 </x-nav-link>
+
+                <!-- Posts Dropdown -->
+                <x-dropdown align="left" width="48">
+                    <x-slot name="trigger">
+                        <button class="flex items-center text-sm font-medium hover:text-gray-300 transition">
+                            Posts
+                            <svg class="ml-1 w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </x-slot>
+
+                    <x-slot name="content">
+                        <x-dropdown-link :href="route('posts.index')">
+                            View All Posts
+                        </x-dropdown-link>
+                        <x-dropdown-link :href="route('posts.create')">
+                            Create Post
+                        </x-dropdown-link>
+                        <x-dropdown-link href="#">
+                            My Posts
+                        </x-dropdown-link>
+                    </x-slot>
+                </x-dropdown>
             @endauth
         </div>
 
@@ -71,6 +94,15 @@
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('players.index')" :active="request()->routeIs('players.*')">
                 Players
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('posts.index')">
+                View All Posts
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('posts.create')">
+                Create Post
+            </x-responsive-nav-link>
+            <x-responsive-nav-link href="#">
+                My Posts
             </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('profile.edit')">
                 {{ __('Profile') }}
