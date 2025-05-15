@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Post;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -17,21 +18,6 @@ class AdminController extends Controller
     }
 
     /**
-     * Update the user's role.
-     */
-    public function updateRole(Request $request, User $user)
-    {
-        $request->validate([
-            'role' => 'required|in:admin,editor,fan',
-        ]);
-
-        $user->role = $request->role;
-        $user->save();
-
-        return back()->with('success', 'User role updated.');
-    }
-
-    /**
      * Delete a user (except self).
      */
     public function destroy(User $user)
@@ -43,5 +29,57 @@ class AdminController extends Controller
         $user->delete();
 
         return back()->with('success', 'User deleted.');
+    }
+
+    /**
+     * View reported content or users.
+     */
+    public function reports()
+    {
+        return view('admin.reports');
+    }
+
+    /**
+     * View logs of user actions or system events.
+     */
+    public function logs()
+    {
+        return view('admin.logs');
+    }
+
+    /**
+     * Show pending posts for approval.
+     */
+    public function pendingPosts()
+    {
+        $posts = Post::where('approved', false)->with(['user', 'player'])->get();
+        return view('admin.pending', compact('posts'));
+    }
+
+    /**
+     * Approve a submitted post.
+     */
+    public function approvePost(Post $post)
+    {
+        $post->approved = true;
+        $post->save();
+
+        return back()->with('success', 'Post approved.');
+    }
+
+    /**
+     * (Optional) Legacy hook for pending content.
+     */
+    public function pendingContent()
+    {
+        return $this->pendingPosts();
+    }
+
+    /**
+     * Show form to create a new site-wide announcement.
+     */
+    public function createAnnouncement()
+    {
+        return view('admin.announcements.create');
     }
 }

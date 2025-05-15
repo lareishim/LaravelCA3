@@ -30,19 +30,6 @@
                         <td class="px-4 py-3 capitalize">{{ $user->role }}</td>
                         <td class="px-4 py-3 text-right space-x-2">
                             @if(auth()->id() !== $user->id)
-                                {{-- Update Role --}}
-                                <form action="{{ route('admin.users.updateRole', $user->id) }}"
-                                      method="POST" class="inline-block">
-                                    @csrf
-                                    @method('PATCH')
-                                    <select name="role" onchange="this.form.submit()"
-                                            class="bg-gray-700 text-white rounded px-2 py-1 text-sm">
-                                        <option value="fan" {{ $user->role === 'fan' ? 'selected' : '' }}>Fan</option>
-                                        <option value="editor" {{ $user->role === 'editor' ? 'selected' : '' }}>Editor</option>
-                                        <option value="admin" {{ $user->role === 'admin' ? 'selected' : '' }}>Admin</option>
-                                    </select>
-                                </form>
-
                                 {{-- Delete --}}
                                 <form action="{{ route('admin.users.destroy', $user->id) }}"
                                       method="POST" class="inline-block ml-2">

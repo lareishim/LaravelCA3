@@ -2,8 +2,8 @@
     <div class="px-4 sm:px-6 lg:px-8 flex justify-between h-16 items-center">
         <!-- Logo + Left Links -->
         <div class="flex items-center space-x-4">
-            <a href="{{ url('images/logo.jpg') }}">
-                <x-application-logo class="block h-9 w-auto fill-current text-white" />
+            <a href="{{ url('/') }}">
+                <img src="{{ asset('images/logo.jpg') }}" alt="NBA Hub Logo" class="h-9 w-auto rounded shadow" />
             </a>
             @auth
                 <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
@@ -12,6 +12,30 @@
                 <x-nav-link :href="route('players.index')" :active="request()->routeIs('players.*')">
                     Players
                 </x-nav-link>
+
+                <!-- Posts Dropdown -->
+                <x-dropdown align="left" width="48">
+                    <x-slot name="trigger">
+                        <button class="flex items-center text-sm font-medium hover:text-gray-300 transition">
+                            📝 Posts
+                            <svg class="ml-1 w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </x-slot>
+
+                    <x-slot name="content">
+                        <x-dropdown-link :href="route('posts.index')">
+                            📄 View All Posts
+                        </x-dropdown-link>
+                        <x-dropdown-link :href="route('posts.create')">
+                            ✍️ Create Post
+                        </x-dropdown-link>
+                        <x-dropdown-link :href="route('posts.mine')">
+                            📁 My Posts
+                        </x-dropdown-link>
+                    </x-slot>
+                </x-dropdown>
             @endauth
         </div>
 
@@ -30,13 +54,13 @@
 
                     <x-slot name="content">
                         <x-dropdown-link :href="route('profile.edit')">
-                            {{ __('Profile') }}
+                            ⚙️ {{ __('Profile') }}
                         </x-dropdown-link>
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <x-dropdown-link :href="route('logout')"
                                              onclick="event.preventDefault(); this.closest('form').submit();">
-                                {{ __('Log Out') }}
+                                🚪 {{ __('Log Out') }}
                             </x-dropdown-link>
                         </form>
                     </x-slot>
@@ -71,14 +95,23 @@
             <x-responsive-nav-link :href="route('players.index')" :active="request()->routeIs('players.*')">
                 Players
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('posts.index')">
+                📄 View All Posts
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('posts.create')">
+                ✍️ Create Post
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('posts.mine')">
+                📁 My Posts
+            </x-responsive-nav-link>
             <x-responsive-nav-link :href="route('profile.edit')">
-                {{ __('Profile') }}
+                ⚙️ {{ __('Profile') }}
             </x-responsive-nav-link>
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <x-responsive-nav-link :href="route('logout')"
                                        onclick="event.preventDefault(); this.closest('form').submit();">
-                    {{ __('Log Out') }}
+                    🚪 {{ __('Log Out') }}
                 </x-responsive-nav-link>
             </form>
         @else
