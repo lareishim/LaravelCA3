@@ -17,21 +17,6 @@ class AdminController extends Controller
     }
 
     /**
-     * Update the user's role.
-     */
-    public function updateRole(Request $request, User $user)
-    {
-        $request->validate([
-            'role' => 'required|in:admin,editor,fan',
-        ]);
-
-        $user->role = $request->role;
-        $user->save();
-
-        return back()->with('success', 'User role updated.');
-    }
-
-    /**
      * Delete a user (except self).
      */
     public function destroy(User $user)
@@ -43,5 +28,40 @@ class AdminController extends Controller
         $user->delete();
 
         return back()->with('success', 'User deleted.');
+    }
+
+    /**
+     * View reported content or users.
+     */
+    public function reports()
+    {
+        // In a real app, you’d fetch reports from a reports table
+        return view('admin.reports');
+    }
+
+    /**
+     * View logs of user actions or system events.
+     */
+    public function logs()
+    {
+        // You could load logs from database or a log file
+        return view('admin.logs');
+    }
+
+    /**
+     * Show pending content for approval.
+     */
+    public function pendingContent()
+    {
+        // Retrieve pending posts or submissions
+        return view('admin.pending');
+    }
+
+    /**
+     * Show form to create a new site-wide announcement.
+     */
+    public function createAnnouncement()
+    {
+        return view('admin.announcements.create');
     }
 }
