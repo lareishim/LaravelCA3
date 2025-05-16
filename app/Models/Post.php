@@ -30,4 +30,12 @@ class Post extends Model
     {
         return $this->belongsTo(Player::class);
     }
+
+    /**
+     * The comments on the post.
+     */
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 }

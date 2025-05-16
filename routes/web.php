@@ -7,11 +7,12 @@ use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\PlayerController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\CommentController;  // Added import for CommentController
 
 // Public homepage
 Route::view('/', 'welcome');
 
-// Authenticated users: profile, dashboard, and posts
+// Authenticated users: profile, dashboard, posts, comments
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -30,6 +31,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
     Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
     Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
+
+    // Comments - only logged-in users can post comments
+    Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
 });
 
 // Public: view players
