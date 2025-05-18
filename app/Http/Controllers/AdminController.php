@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Spatie\Activitylog\Models\Activity; // Import the Activity model
 
 class AdminController extends Controller
 {
@@ -44,7 +45,9 @@ class AdminController extends Controller
      */
     public function logs()
     {
-        return view('admin.logs');
+        // Fetch latest activity logs, paginated
+        $logs = Activity::latest()->paginate(20);
+        return view('admin.logs', compact('logs'));
     }
 
     /**
