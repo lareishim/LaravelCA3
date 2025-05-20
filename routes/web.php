@@ -7,7 +7,7 @@ use App\Http\Controllers\Auth\GoogleController;
 use App\Http\Controllers\PlayerController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PostController;
-use App\Http\Controllers\CommentController;  // Added import for CommentController
+use App\Http\Controllers\CommentController;
 
 // Public homepage
 Route::view('/', 'welcome');
@@ -32,15 +32,18 @@ Route::middleware('auth')->group(function () {
     Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
     Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
 
-    // Comments - only logged-in users can post comments
+    // Comments
     Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
+
+    // Post Reports (user reporting a post)
+    Route::post('/posts/{post}/report', [AdminController::class, 'storeReport'])->name('posts.report');
 });
 
 // Public: view players
 Route::get('/players', [PlayerController::class, 'index'])->name('players.index');
 Route::get('/players/{player}', [PlayerController::class, 'show'])->name('players.show');
 
-// Admin-only: manage players + users + tools
+// Admin-only: manage players, users, tools, reports
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     // Players
     Route::get('/players/create', [PlayerController::class, 'create'])->name('players.create');
@@ -57,9 +60,11 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/posts/pending', [AdminController::class, 'pendingPosts'])->name('posts.pending');
     Route::patch('/posts/{post}/approve', [AdminController::class, 'approvePost'])->name('posts.approve');
 
+    // Reports
+    Route::get('/reports', [AdminController::class, 'showReports'])->name('reports');
+
     // Optional future tools
     Route::get('/content/pending', [AdminController::class, 'pendingContent'])->name('content.pending');
-    Route::get('/reports', [AdminController::class, 'reports'])->name('reports');
     Route::get('/logs', [AdminController::class, 'logs'])->name('logs');
     Route::get('/announcements/create', [AdminController::class, 'createAnnouncement'])->name('announcements.create');
 });
