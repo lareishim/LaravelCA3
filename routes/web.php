@@ -70,3 +70,12 @@ Route::get('/auth/google/callback', [GoogleController::class, 'callback'])->name
 
 // Breeze auth
 require __DIR__.'/auth.php';
+
+// Reports
+Route::middleware(['auth'])->group(function () {
+    Route::post('/posts/{post}/report', [PostReportController::class, 'store'])->name('posts.report');
+});
+
+Route::middleware(['auth', 'can:admin'])->group(function () {
+    Route::get('/admin/reports', [PostReportController::class, 'index'])->name('admin.reports');
+});
