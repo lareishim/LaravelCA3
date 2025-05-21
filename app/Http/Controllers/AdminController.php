@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Helpers\ActivityLogger;
 
 class AdminController extends Controller
 {
@@ -29,6 +30,8 @@ class AdminController extends Controller
 
         $user->delete();
 
+        ActivityLogger::log('user.delete', 'Deleted user ID: ' . $user->id);
+
         return back()->with('success', 'User deleted.');
     }
 
@@ -44,6 +47,8 @@ class AdminController extends Controller
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+
+        ActivityLogger::log('report.post', 'Reported post ID: ' . $post->id);
 
         return back()->with('status', 'Post reported successfully.');
     }
@@ -68,7 +73,20 @@ class AdminController extends Controller
      */
     public function logs()
     {
-        return view('admin.logs');
+        $logs = \App\Models\UserActivity::with('user')->latest()->paginate(10);
+        return view('admin.logs', compact('logs'));
+    }
+
+    /**
+     * Clear all activity logs.
+     */
+    public function clearLogs()
+    {
+        DB::table('user_activities')->truncate();
+
+        ActivityLogger::log('logs.clear', 'Admin cleared all activity logs.');
+
+        return redirect()->back()->with('success', 'Activity logs cleared.');
     }
 
     /**
@@ -87,6 +105,8 @@ class AdminController extends Controller
     {
         $post->approved = true;
         $post->save();
+
+        ActivityLogger::log('post.approve', 'Approved post ID: ' . $post->id);
 
         return back()->with('success', 'Post approved.');
     }
