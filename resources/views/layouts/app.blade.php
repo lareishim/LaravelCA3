@@ -7,6 +7,9 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    {{-- SweetAlert2 CDN --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="bg-gray-900 text-white font-sans antialiased">
 @include('layouts.navigation')
@@ -16,5 +19,8 @@
 </main>
 
 @include('layouts.footer')
+
+{{-- Optional script stack for page-specific JS --}}
+@stack('scripts')
 </body>
 </html>

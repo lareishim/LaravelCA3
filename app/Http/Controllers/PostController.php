@@ -5,11 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Models\Player;
 use Illuminate\Http\Request;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;  // Add this import
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use App\Helpers\ActivityLogger;
 
 class PostController extends Controller
 {
-    use AuthorizesRequests;  // Add this trait
+    use AuthorizesRequests;
 
     /**
      * Show all approved posts.
@@ -40,11 +41,13 @@ class PostController extends Controller
             'player_id' => 'nullable|exists:players,id',
         ]);
 
-        auth()->user()->posts()->create([
+        $post = auth()->user()->posts()->create([
             'title' => $validated['title'],
             'content' => $validated['content'],
             'player_id' => $validated['player_id'] ?? null,
         ]);
+
+        ActivityLogger::log('post.create', 'Created post: ' . $post->title);
 
         return redirect()->route('posts.index')->with('success', 'Post submitted for review!');
     }
@@ -55,6 +58,9 @@ class PostController extends Controller
     public function myPosts()
     {
         $posts = auth()->user()->posts()->with('player')->latest()->get();
+
+        ActivityLogger::log('post.mine.view', 'Viewed own posts.');
+
         return view('posts.mine', compact('posts'));
     }
 
@@ -85,8 +91,10 @@ class PostController extends Controller
             'title' => $validated['title'],
             'content' => $validated['content'],
             'player_id' => $validated['player_id'],
-            'approved' => false, // mark as unapproved after edit
+            'approved' => false,
         ]);
+
+        ActivityLogger::log('post.update', 'Updated post: ' . $post->title . ' (set for re-approval)');
 
         return redirect()->route('posts.mine')->with('success', 'Post updated and sent for re-approval.');
     }
@@ -97,7 +105,11 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         $this->authorize('delete', $post);
+
+        $title = $post->title;
         $post->delete();
+
+        ActivityLogger::log('post.delete', 'Deleted post: ' . $title);
 
         return redirect()->route('posts.mine')->with('success', 'Post deleted.');
     }
