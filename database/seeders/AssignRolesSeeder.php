@@ -12,14 +12,19 @@ class AssignRolesSeeder extends Seeder
     {
         // Ensure roles exist
         $roles = ['admin', 'editor', 'fan'];
+
         foreach ($roles as $role) {
             Role::firstOrCreate(['name' => $role]);
         }
 
-        // Assign roles to users based on email domain
+        // Assign role based on email domain if user has no role yet
         $users = User::all();
 
         foreach ($users as $user) {
+            if ($user->hasAnyRole($roles)) {
+                continue; // Skip if already has a role
+            }
+
             if (str_ends_with($user->email, '@admin.com')) {
                 $user->assignRole('admin');
             } elseif (str_ends_with($user->email, '@editor.com')) {

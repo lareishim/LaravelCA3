@@ -27,15 +27,19 @@ class GoogleController extends Controller
             abort(403, 'Only fans can log in with Google.');
         }
 
-        // ✅ Otherwise continue as fan
+        // ✅ Create or retrieve user
         $user = User::firstOrCreate(
             ['email' => $email],
             [
                 'name' => $googleUser->getName(),
-                'password' => Hash::make(Str::random(16)),
-                'role' => 'fan',
+                'password' => Hash::make(Str::random(24)), // secure random fallback
             ]
         );
+
+        // ✅ Assign fan role if user has no roles yet
+        if (!$user->hasAnyRole(['admin', 'editor', 'fan'])) {
+            $user->assignRole('fan');
+        }
 
         Auth::login($user);
 

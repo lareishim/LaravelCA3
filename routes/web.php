@@ -22,6 +22,9 @@ Route::middleware('auth')->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'show'])->name('dashboard');
 
+    // Messages page (simple messages page, not inbox)
+    Route::get('/messages', [AdminController::class, 'messages'])->name('messages');
+
     // Like/unlike players
     Route::post('/players/{player}/like', [PlayerController::class, 'like'])->name('players.like');
     Route::delete('/players/{player}/unlike', [PlayerController::class, 'unlike'])->name('players.unlike');
@@ -72,7 +75,10 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
     // Optional tools
     Route::get('/content/pending', [AdminController::class, 'pendingContent'])->name('content.pending');
+
+    // Announcements (create & store only)
     Route::get('/announcements/create', [AdminController::class, 'createAnnouncement'])->name('announcements.create');
+    Route::post('/announcements/store', [AdminController::class, 'storeAnnouncement'])->name('announcements.store');
 });
 
 // 🔐 Google login

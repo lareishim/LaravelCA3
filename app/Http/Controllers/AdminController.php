@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Post;
+use App\Models\Announcement;
 use App\Helpers\ActivityLogger;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -137,5 +138,38 @@ class AdminController extends Controller
     public function createAnnouncement()
     {
         return view('admin.announcements.create');
+    }
+
+    /**
+     * Store a new announcement.
+     */
+    public function storeAnnouncement(Request $request)
+    {
+        $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
+        ]);
+
+        Announcement::create([
+            'title' => $request->title,
+            'content' => $request->content,
+            'user_id' => auth()->id(),
+        ]);
+
+        ActivityLogger::log(
+            'Created announcement',
+            'Announcement titled "' . $request->title . '" was created.'
+        );
+
+        return redirect()->route('admin.announcements.create')->with('success', 'Announcement created.');
+    }
+
+    /**
+     * Shared messages page for all users showing announcements.
+     */
+    public function messages()
+    {
+        $announcements = Announcement::latest()->paginate(10);
+        return view('messages.index', compact('announcements'));
     }
 }
