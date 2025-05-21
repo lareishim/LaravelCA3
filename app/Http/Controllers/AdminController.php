@@ -4,9 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Post;
+use App\Helpers\ActivityLogger;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Helpers\ActivityLogger;
 
 class AdminController extends Controller
 {
@@ -30,7 +30,10 @@ class AdminController extends Controller
 
         $user->delete();
 
-        ActivityLogger::log('user.delete', 'Deleted user ID: ' . $user->id);
+        ActivityLogger::log(
+            'Deleted user',
+            'User ID: ' . $user->id . ' was deleted by admin.'
+        );
 
         return back()->with('success', 'User deleted.');
     }
@@ -48,7 +51,10 @@ class AdminController extends Controller
             'updated_at' => now(),
         ]);
 
-        ActivityLogger::log('report.post', 'Reported post ID: ' . $post->id);
+        ActivityLogger::log(
+            'Reported post',
+            'Post ID: ' . $post->id . ' was reported with reason: ' . $request->input('reason', 'No reason provided')
+        );
 
         return back()->with('status', 'Post reported successfully.');
     }
@@ -73,7 +79,7 @@ class AdminController extends Controller
      */
     public function logs()
     {
-        $logs = \App\Models\UserActivity::with('user')->latest()->paginate(10);
+        $logs = \Spatie\Activitylog\Models\Activity::with('causer')->latest()->paginate(10);
         return view('admin.logs', compact('logs'));
     }
 
@@ -82,9 +88,12 @@ class AdminController extends Controller
      */
     public function clearLogs()
     {
-        DB::table('user_activities')->truncate();
+        DB::table('activity_log')->truncate();
 
-        ActivityLogger::log('logs.clear', 'Admin cleared all activity logs.');
+        ActivityLogger::log(
+            'Admin cleared all activity logs.',
+            'All activity logs were purged by admin ' . auth()->user()->name . '.'
+        );
 
         return redirect()->back()->with('success', 'Activity logs cleared.');
     }
@@ -106,7 +115,10 @@ class AdminController extends Controller
         $post->approved = true;
         $post->save();
 
-        ActivityLogger::log('post.approve', 'Approved post ID: ' . $post->id);
+        ActivityLogger::log(
+            'Approved post',
+            'Post ID: ' . $post->id . ' has been approved.'
+        );
 
         return back()->with('success', 'Post approved.');
     }

@@ -8,7 +8,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
-use Spatie\Activitylog\Models\Activity;
+use App\Helpers\ActivityLogger;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -28,14 +28,11 @@ class AuthenticatedSessionController extends Controller
         $request->authenticate();
         $request->session()->regenerate();
 
-        // Log login activity
-        activity('auth')
-            ->causedBy(auth()->user())
-            ->withProperties([
-                'ip' => $request->ip(),
-                'user_agent' => $request->userAgent(),
-            ])
-            ->log('User logged in');
+        // Log login activity using ActivityLogger
+        ActivityLogger::log(
+            'login',
+            'User logged in from IP ' . $request->ip() . ' using ' . $request->userAgent()
+        );
 
         return redirect()->intended(route('dashboard'));
     }
@@ -48,13 +45,10 @@ class AuthenticatedSessionController extends Controller
         $user = Auth::user();
 
         // Log logout activity before actual logout
-        activity('auth')
-            ->causedBy($user)
-            ->withProperties([
-                'ip' => $request->ip(),
-                'user_agent' => $request->userAgent(),
-            ])
-            ->log('User logged out');
+        ActivityLogger::log(
+            'logout',
+            'User logged out from IP ' . $request->ip() . ' using ' . $request->userAgent()
+        );
 
         Auth::guard('web')->logout();
 

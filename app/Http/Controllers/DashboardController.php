@@ -8,11 +8,11 @@ class DashboardController extends Controller
 {
     public function show()
     {
-        $role = Auth::user()->role;
+        $user = Auth::user();
 
-        return match ($role) {
-            'admin' => view('admin.dashboard'),
-            'editor' => view('editor.dashboard'),
+        return match (true) {
+            $user->hasRole('admin') => view('admin.dashboard'),
+            $user->hasRole('editor') => view('editor.dashboard'),
             default => view('fan.dashboard'),
         };
     }

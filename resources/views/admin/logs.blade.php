@@ -27,7 +27,7 @@
                 <table class="w-full table-auto border-collapse text-sm">
                     <thead>
                     <tr class="bg-gray-700 text-left">
-                        <th class="p-3 border border-gray-600">Action</th>
+                        <th class="p-3 border border-gray-600">Event</th>
                         <th class="p-3 border border-gray-600">Description</th>
                         <th class="p-3 border border-gray-600">User</th>
                         <th class="p-3 border border-gray-600">Date</th>
@@ -36,9 +36,9 @@
                     <tbody>
                     @foreach ($logs as $log)
                         <tr class="border border-gray-700 hover:bg-gray-700">
-                            <td class="p-3">{{ $log->action }}</td>
-                            <td class="p-3">{{ $log->description ?? '-' }}</td>
-                            <td class="p-3">{{ $log->user?->name ?? 'System' }}</td>
+                            <td class="p-3">{{ $log->description }}</td>
+                            <td class="p-3">{{ $log->properties['description'] ?? '-' }}</td>
+                            <td class="p-3">{{ $log->causer?->name ?? 'System' }}</td>
                             <td class="p-3">{{ $log->created_at->format('M d, Y H:i') }}</td>
                         </tr>
                     @endforeach
