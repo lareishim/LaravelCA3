@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Player;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Helpers\ActivityLogger;
 
 class PlayerController extends Controller
 {
@@ -33,7 +34,9 @@ class PlayerController extends Controller
             'rebounds_per_game' => 'nullable|integer',
         ]);
 
-        Player::create($request->all());
+        $player = Player::create($request->all());
+
+        ActivityLogger::log('player.create', 'Added player: ' . $player->name);
 
         return redirect()->route('players.index')->with('success', 'Player added successfully.');
     }
@@ -64,12 +67,17 @@ class PlayerController extends Controller
 
         $player->update($request->all());
 
+        ActivityLogger::log('player.update', 'Updated player: ' . $player->name);
+
         return redirect()->route('players.index')->with('success', 'Player updated.');
     }
 
     public function destroy(Player $player)
     {
+        $playerName = $player->name;
         $player->delete();
+
+        ActivityLogger::log('player.delete', 'Deleted player: ' . $playerName);
 
         return redirect()->route('players.index')->with('success', 'Player deleted.');
     }
@@ -80,6 +88,8 @@ class PlayerController extends Controller
         $user = Auth::user();
         $user->likedPlayers()->syncWithoutDetaching([$player->id]);
 
+        ActivityLogger::log('player.like', 'Liked player: ' . $player->name);
+
         return redirect()->back()->with('success', 'Player liked.');
     }
 
@@ -88,6 +98,8 @@ class PlayerController extends Controller
     {
         $user = Auth::user();
         $user->likedPlayers()->detach($player->id);
+
+        ActivityLogger::log('player.unlike', 'Unliked player: ' . $player->name);
 
         return redirect()->back()->with('success', 'Player unliked.');
     }

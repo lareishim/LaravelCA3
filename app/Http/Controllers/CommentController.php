@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use App\Helpers\ActivityLogger;
 
 class CommentController extends Controller
 {
@@ -23,10 +24,13 @@ class CommentController extends Controller
         ]);
 
         // Create the comment linked to the post and the authenticated user
-        $post->comments()->create([
+        $comment = $post->comments()->create([
             'user_id' => auth()->id(),
             'content' => $validated['content'],
         ]);
+
+        // Log the comment creation
+        ActivityLogger::log('comment.create', 'Commented on post ID: ' . $post->id . ', comment ID: ' . $comment->id);
 
         return back()->with('success', 'Comment added!');
     }

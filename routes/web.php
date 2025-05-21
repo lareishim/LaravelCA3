@@ -9,21 +9,24 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\CommentController;
 
-// Public homepage
+// 🌐 Public homepage
 Route::view('/', 'welcome');
 
-// Authenticated users: profile, dashboard, posts, comments
+// 🔐 Authenticated users
 Route::middleware('auth')->group(function () {
+    // Profile management
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'show'])->name('dashboard');
 
     // Like/unlike players
     Route::post('/players/{player}/like', [PlayerController::class, 'like'])->name('players.like');
     Route::delete('/players/{player}/unlike', [PlayerController::class, 'unlike'])->name('players.unlike');
 
-    // Posts (fan/editor/admin access)
+    // Posts (fan/editor/admin)
     Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
     Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
     Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
@@ -35,43 +38,46 @@ Route::middleware('auth')->group(function () {
     // Comments
     Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
 
-    // Post Reports (user reporting a post)
+    // Post reporting
     Route::post('/posts/{post}/report', [AdminController::class, 'storeReport'])->name('posts.report');
 });
 
-// Public: view players
+// 👥 Public: view players
 Route::get('/players', [PlayerController::class, 'index'])->name('players.index');
 Route::get('/players/{player}', [PlayerController::class, 'show'])->name('players.show');
 
-// Admin-only: manage players, users, tools, reports
+// 🔐 Admin-only routes
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    // Players
+    // Player management
     Route::get('/players/create', [PlayerController::class, 'create'])->name('players.create');
     Route::post('/players', [PlayerController::class, 'store'])->name('players.store');
     Route::get('/players/{player}/edit', [PlayerController::class, 'edit'])->name('players.edit');
     Route::put('/players/{player}', [PlayerController::class, 'update'])->name('players.update');
     Route::delete('/players/{player}', [PlayerController::class, 'destroy'])->name('players.destroy');
 
-    // Users
+    // User management
     Route::get('/users', [AdminController::class, 'users'])->name('users.index');
     Route::delete('/users/{user}', [AdminController::class, 'destroy'])->name('users.destroy');
 
-    // Admin post approval
+    // Post approval
     Route::get('/posts/pending', [AdminController::class, 'pendingPosts'])->name('posts.pending');
     Route::patch('/posts/{post}/approve', [AdminController::class, 'approvePost'])->name('posts.approve');
 
     // Reports
     Route::get('/reports', [AdminController::class, 'showReports'])->name('reports');
 
-    // Optional future tools
-    Route::get('/content/pending', [AdminController::class, 'pendingContent'])->name('content.pending');
+    // Activity Logs
     Route::get('/logs', [AdminController::class, 'logs'])->name('logs');
+    Route::delete('/logs/clear', [AdminController::class, 'clearLogs'])->name('logs.clear');
+
+    // Optional tools
+    Route::get('/content/pending', [AdminController::class, 'pendingContent'])->name('content.pending');
     Route::get('/announcements/create', [AdminController::class, 'createAnnouncement'])->name('announcements.create');
 });
 
-// Google login
+// 🔐 Google login
 Route::get('/auth/google', [GoogleController::class, 'redirect'])->name('google.redirect');
 Route::get('/auth/google/callback', [GoogleController::class, 'callback'])->name('google.callback');
 
-// Breeze auth
+// 🛡️ Breeze Auth scaffolding (login, register, etc.)
 require __DIR__.'/auth.php';

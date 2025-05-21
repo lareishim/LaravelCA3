@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use App\Helpers\ActivityLogger;
 
 class ProfileController extends Controller
 {
@@ -34,6 +35,8 @@ class ProfileController extends Controller
 
         $request->user()->save();
 
+        ActivityLogger::log('profile.update', 'Updated profile details.');
+
         return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 
@@ -47,6 +50,9 @@ class ProfileController extends Controller
         ]);
 
         $user = $request->user();
+        $userId = $user->id;
+
+        ActivityLogger::log('account.delete', 'User deleted their account.');
 
         Auth::logout();
 
