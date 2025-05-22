@@ -81,7 +81,7 @@
                             ⚙️ {{ __('Profile') }}
                         </x-dropdown-link>
 
-                        <x-dropdown-link :href="route('messages')">
+                        <x-dropdown-link :href="route('messages.index')">
                             📬 {{ __('Messages') }}
                         </x-dropdown-link>
 
