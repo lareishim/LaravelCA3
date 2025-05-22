@@ -1,88 +1,96 @@
+# 🏀 Basketball Afrobeats Laravel Project
 
-# 🏀 NBA Hub — Laravel 10 App
+This is a full-stack Laravel web application that combines the passion of **NBA basketball culture** with the rhythm and influence of **Afrobeats music**. Users can explore NBA players, view their favorite Afrobeats tracks, and interact with a fan-driven platform.
 
-**NBA Hub** is a role-based Laravel web app that connects basketball fans with their favorite NBA players — and the Afrobeats tracks they vibe to.
+## 👥 Collaborators
 
-## 🚀 Features
+- **David Ailemen**
+- **Lare Adekeye**
 
-- User authentication (fan, editor, admin)
-- Google login for fans
-- Dashboard based on user role
-- Admin-only CRUD for NBA players
-- Player profiles with:
-  - YouTube highlight links
-  - Afrobeats track embeds
-- Tailwind CSS dark theme
-- Clean UI with full mobile responsiveness
+## 🎯 Features
 
-## 📁 Folder Structure Highlights
+### 🧑‍💼 User Roles
+- **Admin**: Full access — manage players, announcements, posts, reports, logs.
+- **Editor**: Moderate content, review pending posts.
+- **Fan**: Like players, post content, receive announcements.
 
-- `app/Http/Controllers/PlayerController.php` — Player CRUD logic
-- `resources/views/players/` — Player Blade templates
-- `routes/web.php` — Route definitions with role middleware
-- `app/Http/Middleware/RoleMiddleware.php` — Role-based access control
+### 🏀 NBA Player Pages
+- Each player is linked to:
+  - Profile image and bio
+  - Favorite Afrobeats track
+  - Embedded YouTube video
 
-## 🧑‍💻 User Roles
+### 💬 Announcement System
+- Admins can create announcements sent to all users.
+- Users have an NBA-style **message inbox** with:
+  - Red unread dot
+  - Auto-mark as read on click
+  - "Clear Messages" button
 
-| Role    | Permissions                                  |
-|---------|----------------------------------------------|
-| Fan     | View players and Afrobeats music             |
-| Editor  | (Optional) Can be extended for moderation     |
-| Admin   | Full player management: create, edit, delete |
+### 📣 Blog + Commenting
+- Authenticated fans can create posts and comment.
+- Editors/Admins approve posts before they go live.
 
-## 🧱 Tech Stack
+### 🔐 Google Login
+- OAuth via Google for fast registration and sign-in.
 
-- Laravel 10
-- Tailwind CSS via Vite
-- MySQL / SQLite (your choice)
-- Google OAuth 2.0
-- Blade components (`x-input-label`, `x-text-input`, etc.)
+### 🛠️ Activity Logs
+- Every important action is tracked with Spatie’s `activitylog`.
 
-## 🛠️ Installation
+## 💡 Tech Stack
 
+- **Backend**: Laravel 10+
+- **Frontend**: Blade + Tailwind CSS
+- **Database**: MySQL
+- **Authentication**: Laravel Breeze + Google OAuth
+- **Logging**: Spatie Activitylog
+- **Roles**: Spatie Laravel Permissions
+
+## ⚙️ Setup Instructions
+
+1. **Clone the repository**
 ```bash
-git clone https://github.com/your-username/nba-hub.git
-cd nba-hub
+git clone https://github.com/lareishim/LaravelCA3.git
+cd LaravelCA3
+```
 
-cp .env.example .env
+2. **Install dependencies**
+```bash
 composer install
+npm install
+npm run build
+```
+
+3. **Configure environment**
+```bash
+cp .env.example .env
 php artisan key:generate
-php artisan migrate
-
-# Run Vite in a separate terminal
-npm install && npm run dev
 ```
 
-## 🔑 Google OAuth Setup
-
-Add your credentials to `.env`:
-
-```env
-GOOGLE_CLIENT_ID=your-id
-GOOGLE_CLIENT_SECRET=your-secret
-GOOGLE_REDIRECT_URI=http://127.0.0.1:8000/auth/google/callback
+4. **Set up database**
+```bash
+php artisan migrate --seed
 ```
 
-## 🧪 Testing Login Roles
+5. **Run the server**
+```bash
+php artisan serve
+```
 
-- Register with:
-  - `name@admin.com` → gets admin role
-  - `name@editor.com` → gets editor role
-  - any other → fan
-- Use login form or Google login (fans only)
+6. **Login credentials**
+Use the seeded admin account or register with Google.
 
-## 👥 Contributions
+## 📸 Screenshots
 
-Pull requests welcome! Fork the repo and improve the NBA music + basketball experience.
+_(You can paste screenshots here of the dashboard, message inbox, and player profiles.)_
 
----
+## 🚀 Future Enhancements
 
-## 📸 Screenshot
-
-> _(Include a screenshot of your dashboard or player page here)_
-
----
+- Reactions on posts
+- Notifications for liked players
+- Real-time chat among fans
+- Spotify API integration for live Afrobeats playlists
 
 ## 📄 License
 
-MIT © YLare Adekeye and David Ailemen
+This project is for educational and creative collaboration by **David Ailemen** and **Lare Adekeye**. All rights reserved.
