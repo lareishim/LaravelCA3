@@ -18,9 +18,10 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
         ]);
 
-        // Only call AssignRolesSeeder (handles role creation + assignment)
+        // Call all seeders
         $this->call([
             AssignRolesSeeder::class,
+            PlayerSeeder::class, // ✅ Added player seeder
         ]);
     }
 }

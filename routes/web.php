@@ -22,14 +22,15 @@ Route::middleware('auth')->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'show'])->name('dashboard');
 
-    // Messages page (simple messages page, not inbox)
-    Route::get('/messages', [AdminController::class, 'messages'])->name('messages');
+    // 💬 Message System (Announcements)
+    Route::get('/messages', [AdminController::class, 'messages'])->name('messages.index');
+    Route::get('/messages/{announcement}', [AdminController::class, 'showMessage'])->name('messages.show');
 
-    // Like/unlike players
+    // Player like/unlike
     Route::post('/players/{player}/like', [PlayerController::class, 'like'])->name('players.like');
     Route::delete('/players/{player}/unlike', [PlayerController::class, 'unlike'])->name('players.unlike');
 
-    // Posts (fan/editor/admin)
+    // Posts
     Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
     Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
     Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
@@ -76,9 +77,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     // Optional tools
     Route::get('/content/pending', [AdminController::class, 'pendingContent'])->name('content.pending');
 
-    // Announcements (create & store only)
+    // Announcements (admin creates them)
     Route::get('/announcements/create', [AdminController::class, 'createAnnouncement'])->name('announcements.create');
-    Route::post('/announcements/store', [AdminController::class, 'storeAnnouncement'])->name('announcements.store');
+    Route::post('/announcements', [AdminController::class, 'storeAnnouncement'])->name('announcements.store');
 });
 
 // 🔐 Google login

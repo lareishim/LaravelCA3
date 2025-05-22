@@ -66,6 +66,16 @@ class User extends Authenticatable
     }
 
     /**
+     * Announcements seen by the user.
+     */
+    public function seenAnnouncements(): BelongsToMany
+    {
+        return $this->belongsToMany(Announcement::class)
+            ->withPivot('seen_at')
+            ->withTimestamps();
+    }
+
+    /**
      * Spatie activity log options.
      */
     public function getActivitylogOptions(): LogOptions
