@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Announcement extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'title',
         'content',
@@ -16,21 +19,31 @@ class Announcement extends Model
     ];
 
     /**
-     * The admin who posted the announcement.
+     * The admin who created the announcement.
      */
-    public function user(): BelongsTo
+    public function creator(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     /**
-     * Users who have seen the announcement.
-     * Used only for marking announcements as seen.
+     * Users who received this announcement (many-to-many).
      */
-    public function seenByUsers(): BelongsToMany
+    public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class)
-            ->withPivot('seen_at')
+            ->withPivot('seen', 'seen_at')
             ->withTimestamps();
+    }
+
+    /**
+     * Check if the given user has seen the announcement.
+     */
+    public function isSeenBy(User $user): bool
+    {
+        return $this->users()
+            ->wherePivot('user_id', $user->id)
+            ->wherePivot('seen', true)
+            ->exists();
     }
 }

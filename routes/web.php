@@ -14,7 +14,7 @@ Route::view('/', 'welcome');
 
 // 🔐 Authenticated users
 Route::middleware('auth')->group(function () {
-    // Profile management
+    // Profile
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
@@ -22,9 +22,10 @@ Route::middleware('auth')->group(function () {
     // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'show'])->name('dashboard');
 
-    // 💬 Message System (Announcements)
+    // 💬 Messages (Inbox)
     Route::get('/messages', [AdminController::class, 'messages'])->name('messages.index');
     Route::get('/messages/{announcement}', [AdminController::class, 'showMessage'])->name('messages.show');
+    Route::delete('/messages/clear', [AdminController::class, 'clearMessages'])->name('messages.clear');
 
     // Player like/unlike
     Route::post('/players/{player}/like', [PlayerController::class, 'like'])->name('players.like');
@@ -77,7 +78,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     // Optional tools
     Route::get('/content/pending', [AdminController::class, 'pendingContent'])->name('content.pending');
 
-    // Announcements (admin creates them)
+    // Admin announcement creation
     Route::get('/announcements/create', [AdminController::class, 'createAnnouncement'])->name('announcements.create');
     Route::post('/announcements', [AdminController::class, 'storeAnnouncement'])->name('announcements.store');
 });
@@ -86,5 +87,5 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 Route::get('/auth/google', [GoogleController::class, 'redirect'])->name('google.redirect');
 Route::get('/auth/google/callback', [GoogleController::class, 'callback'])->name('google.callback');
 
-// 🛡️ Breeze Auth scaffolding (login, register, etc.)
+// 🛡️ Breeze auth routes
 require __DIR__.'/auth.php';

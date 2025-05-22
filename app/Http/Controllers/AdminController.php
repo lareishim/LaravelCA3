@@ -125,35 +125,55 @@ class AdminController extends Controller
             'user_id' => auth()->id(),
         ]);
 
+        $allUsers = User::all();
+        foreach ($allUsers as $user) {
+            $announcement->users()->attach($user->id, [
+                'seen' => false,
+                'seen_at' => null,
+            ]);
+        }
+
         ActivityLogger::log(
             'Created announcement',
             'Announcement ID: ' . $announcement->id . ' was created by admin ' . auth()->user()->name
         );
 
-        return redirect()->route('messages.index')->with('success', 'Announcement created successfully.');
+        return redirect()->route('messages.index')->with('success', 'Announcement created and sent to all users.');
     }
 
-    /**
-     * Show all messages (announcement inbox).
-     */
     public function messages()
     {
-        $user = auth()->user();
-        $announcements = Announcement::latest()->paginate(10);
-        return view('messages.index', compact('announcements', 'user'));
+        $announcements = auth()->user()->announcements()
+            ->withPivot('seen', 'seen_at')
+            ->orderByDesc('announcement_user.created_at')
+            ->get();
+
+        return view('messages.index', compact('announcements'));
     }
 
-    /**
-     * View a single message and mark it as seen.
-     */
     public function showMessage(Announcement $announcement)
     {
         $user = auth()->user();
 
         if (! $user->seenAnnouncements->contains($announcement->id)) {
-            $user->seenAnnouncements()->attach($announcement->id, ['seen_at' => now()]);
+            $user->seenAnnouncements()->updateExistingPivot($announcement->id, [
+                'seen' => true,
+                'seen_at' => now(),
+            ]);
         }
 
         return view('messages.show', compact('announcement'));
+    }
+
+    public function clearMessages()
+    {
+        auth()->user()->announcements()->detach();
+
+        ActivityLogger::log(
+            'Cleared inbox messages',
+            auth()->user()->name . ' cleared all their announcements.'
+        );
+
+        return back()->with('success', 'Messages cleared.');
     }
 }

@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('announcement_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->boolean('seen')->default(false); // ✅ Added missing column
             $table->timestamp('seen_at')->nullable();
             $table->timestamps();
 

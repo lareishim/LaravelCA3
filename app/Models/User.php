@@ -66,12 +66,22 @@ class User extends Authenticatable
     }
 
     /**
-     * Announcements seen by the user.
+     * Announcements the user has seen (used to mark as read).
      */
     public function seenAnnouncements(): BelongsToMany
     {
         return $this->belongsToMany(Announcement::class)
             ->withPivot('seen_at')
+            ->withTimestamps();
+    }
+
+    /**
+     * All announcements assigned to the user.
+     */
+    public function announcements(): BelongsToMany
+    {
+        return $this->belongsToMany(Announcement::class)
+            ->withPivot('seen', 'seen_at')
             ->withTimestamps();
     }
 
