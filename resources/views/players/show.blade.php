@@ -7,14 +7,10 @@
             {{-- Player Info --}}
             <div class="flex flex-col md:flex-row gap-6 items-center">
                 {{-- Player Image --}}
-                @if ($player->image && file_exists(public_path('images/' . $player->image)))
-                    <img src="{{ asset('images/' . $player->image) }}" alt="{{ $player->name }}"
-                         class="w-64 h-64 object-cover rounded border border-gray-700">
-                @else
-                    <div class="w-64 h-64 flex items-center justify-center bg-gray-800 text-gray-400 rounded">
-                        No Image Available
-                    </div>
-                @endif
+                <img src="{{ asset('images/' . $player->image) }}"
+                     alt="{{ $player->name }}"
+                     class="w-64 h-64 object-cover rounded border border-gray-700"
+                     onerror="this.onerror=null;this.src='{{ asset('images/default.png') }}';">
 
                 {{-- Player Stats --}}
                 <div class="space-y-2 text-center md:text-left">

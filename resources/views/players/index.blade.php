@@ -4,14 +4,12 @@
     <div class="py-8 px-4 max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         @forelse ($players as $player)
             <div class="bg-gray-800 rounded-lg shadow-md overflow-hidden p-4 flex flex-col items-center text-center">
-                @if ($player->image && file_exists(public_path('images/' . $player->image)))
-                    <img src="{{ asset('images/' . $player->image) }}" alt="{{ $player->name }}"
-                         class="w-48 h-48 object-cover rounded mb-4 mx-auto">
-                @else
-                    <div class="w-48 h-48 bg-gray-700 flex items-center justify-center text-gray-400 rounded mb-4">
-                        No Image
-                    </div>
-                @endif
+
+                {{-- ✅ Display player image with fallback --}}
+                <img src="{{ asset('images/' . $player->image) }}"
+                     alt="{{ $player->name }}"
+                     class="w-48 h-48 object-cover rounded mb-4 mx-auto"
+                     onerror="this.onerror=null;this.src='{{ asset('images/default.png') }}';">
 
                 <h3 class="text-lg font-bold">{{ $player->name }}</h3>
                 <p class="text-sm text-gray-400">{{ $player->team }} — {{ $player->position }}</p>
@@ -22,13 +20,18 @@
                     View Profile
                 </a>
 
-                <form method="POST" action="{{ route('players.like', $player->id) }}" class="mt-3">
-                    @csrf
-                    <button type="submit"
-                            class="mt-2 px-4 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded">
-                        👍 Like Player
-                    </button>
-                </form>
+                {{-- ✅ Like button (only if not admin) --}}
+                @auth
+                    @if (!auth()->user()->hasRole('admin'))
+                        <form method="POST" action="{{ route('players.like', $player->id) }}" class="mt-3">
+                            @csrf
+                            <button type="submit"
+                                    class="mt-2 px-4 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded">
+                                👍 Like Player
+                            </button>
+                        </form>
+                    @endif
+                @endauth
             </div>
         @empty
             <p class="text-gray-400 col-span-full text-center">No players found.</p>
