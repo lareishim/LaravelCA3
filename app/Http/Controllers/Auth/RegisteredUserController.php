@@ -36,18 +36,20 @@ class RegisteredUserController extends Controller
 
         $email = $request->email;
 
-        $role = match (true) {
-            Str::endsWith($email, '@admin.com') => 'admin',
-            Str::endsWith($email, '@editor.com') => 'editor',
-            default => 'fan',
-        };
-
         $user = User::create([
             'name' => $request->name,
             'email' => $email,
             'password' => Hash::make($request->password),
-            'role' => $role,
         ]);
+
+        // Assign role based on email domain
+        if (Str::endsWith($email, '@admin.com')) {
+            $user->assignRole('admin');
+        } elseif (Str::endsWith($email, '@editor.com')) {
+            $user->assignRole('editor');
+        } else {
+            $user->assignRole('fan');
+        }
 
         event(new Registered($user));
         Auth::login($user);

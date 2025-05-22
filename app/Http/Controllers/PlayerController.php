@@ -11,7 +11,7 @@ class PlayerController extends Controller
 {
     public function index()
     {
-        $players = Player::all();
+        $players = Player::orderByDesc('points_per_game')->get();
         return view('players.index', compact('players'));
     }
 
@@ -82,10 +82,14 @@ class PlayerController extends Controller
         return redirect()->route('players.index')->with('success', 'Player deleted.');
     }
 
-    // ✅ Like a player
     public function like(Player $player)
     {
         $user = Auth::user();
+
+        if ($user->hasRole('admin')) {
+            return redirect()->back()->with('error', 'Admins are not allowed to like players.');
+        }
+
         $user->likedPlayers()->syncWithoutDetaching([$player->id]);
 
         ActivityLogger::log('player.like', 'Liked player: ' . $player->name);
@@ -93,7 +97,7 @@ class PlayerController extends Controller
         return redirect()->back()->with('success', 'Player liked.');
     }
 
-    // ✅ Unlike a player
+
     public function unlike(Player $player)
     {
         $user = Auth::user();

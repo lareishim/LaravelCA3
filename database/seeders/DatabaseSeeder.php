@@ -18,7 +18,9 @@ class DatabaseSeeder extends Seeder
             'email' => 'test@example.com',
         ]);
 
-        // ✅ Call the custom seeder that assigns roles based on email
-        $this->call(AssignRolesSeeder::class);
+        // Only call AssignRolesSeeder (handles role creation + assignment)
+        $this->call([
+            AssignRolesSeeder::class,
+        ]);
     }
 }
